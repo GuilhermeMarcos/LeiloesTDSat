@@ -23,9 +23,15 @@ public class ProdutosDAO {
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
-    public void cadastrarProduto (ProdutosDTO produto){
+    // Retorna true se o produto foi gravado no banco e false se ocorreu algum erro
+    public boolean cadastrarProduto (ProdutosDTO produto){
         
         conn = new conectaDAO().connectDB();
+        
+        // Sem conexão não há como cadastrar
+        if (conn == null) {
+            return false;
+        }
         
         try {
             prep = conn.prepareStatement("INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)");
@@ -36,8 +42,10 @@ public class ProdutosDAO {
             
             prep.close();
             conn.close();
+            return true;
         } catch (SQLException erro) {
             System.out.println("Erro ao cadastrar produto: " + erro.getMessage());
+            return false;
         }
         
     }
