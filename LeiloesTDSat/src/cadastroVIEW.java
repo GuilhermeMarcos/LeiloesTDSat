@@ -144,11 +144,31 @@ public class cadastroVIEW extends javax.swing.JFrame {
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         ProdutosDTO produto = new ProdutosDTO();
-        String nome = cadastroNome.getText();
-        String valor = cadastroValor.getText();
+        String nome = cadastroNome.getText().trim();
+        String valor = cadastroValor.getText().trim();
         String status = "A Venda";
+        
+        // Não deixa cadastrar com campos em branco
+        if (nome.isEmpty() || valor.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preencha o nome e o valor do produto.", "Atenção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // O valor precisa ser um número inteiro maior que zero
+        int valorNumerico;
+        try {
+            valorNumerico = Integer.parseInt(valor);
+        } catch (NumberFormatException erro) {
+            JOptionPane.showMessageDialog(this, "O valor deve ser um número inteiro (somente dígitos).", "Atenção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (valorNumerico <= 0) {
+            JOptionPane.showMessageDialog(this, "O valor deve ser maior que zero.", "Atenção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         produto.setNome(nome);
-        produto.setValor(Integer.parseInt(valor));
+        produto.setValor(valorNumerico);
         produto.setStatus(status);
         
         ProdutosDAO produtodao = new ProdutosDAO();
